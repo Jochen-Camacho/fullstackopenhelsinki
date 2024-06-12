@@ -1,3 +1,3 @@
 EXO4
 
-![image](https://github.com/Jochen-Camacho/fullstackopenhelsinki/assets/102202165/8d0bc5e0-adce-4033-907c-bd135d9a3603)
+![image](https://github.com/Jochen-Camacho/fullstackopenhelsinki/assets/102202165/8dbed6f7-3088-4256-be88-b6653d39868c)
