@@ -1,8 +1,4 @@
-export const Total = ({ exercises1, exercises2, exercises3 }) => {
-  return (
-    <p>
-      Number of exercises
-      {exercises1 + exercises2 + exercises3}
-    </p>
-  );
+export const Total = ({ parts }) => {
+  const total = parts.reduce((acc, part) => acc + part.exercises, 0);
+  return <p>Number of exercises {total}</p>;
 };
