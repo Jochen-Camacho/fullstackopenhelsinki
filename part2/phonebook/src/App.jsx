@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
+import PhonebookService from "./components/services/persons";
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -11,27 +11,68 @@ function App() {
   const [searchTerm, setSearchTerm] = useState([...persons]);
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
-    });
+    PhonebookService.getAll()
+      .then((response) => {
+        setPersons(response);
+      })
+      .catch((error) => {
+        console.log("Failed to fetch data: ", error);
+      });
   }, []);
-  console.log("persons", persons);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    console.log("old persons", persons);
-    console.log("newName", newName);
+
     if (persons.map((person) => person.name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        confirm(
+          `${newName} is already added to phonebook, replace teh old number with a new one?`
+        )
+      ) {
+        const person = persons.find((person) => person.name === newName);
+        console.log("updating number for: ", newName);
+        const newPerson = { ...person, number: newNumber };
+        console.log("newPerson: ", newPerson);
+        PhonebookService.update(newPerson.id, newPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== response.id ? person : response
+              )
+            );
+          })
+          .catch((error) => {
+            console.log("Failed to update person: ", error);
+          });
+      }
       return;
     }
-    const newPersonsList = [...persons, { name: newName, number: newNumber }];
-    setPersons(newPersonsList);
-    console.log("new persons", newPersonsList);
+
+    PhonebookService.create({ name: newName, number: newNumber })
+      .then((response) => {
+        setPersons([...persons, response]);
+      })
+      .catch((error) => {
+        console.log("Failed to add new person: ", error);
+      });
+
     setNewName("");
     setNewNumber("");
+  };
+
+  const handleDeleteClick = (id) => {
+    console.log("deleting user: ", id);
+    const person = persons.find((person) => person.id === id);
+    console.log("person: ", person);
+    if (confirm(`Delete ${person.name} ?`)) {
+      PhonebookService.deletePerson(id)
+        .then((response) => {
+          setPersons(persons.filter((person) => person.id !== response.id));
+        })
+        .catch((error) => {
+          console.log("Failed to delete person: ", error);
+        });
+    }
   };
 
   const handleSearchChange = (e) => {
@@ -55,7 +96,7 @@ function App() {
         handleOnSubmit={handleOnSubmit}
       />
       <h2>Numbers</h2>
-      <Persons searchResults={filteredPersons} />
+      <Persons searchResults={filteredPersons} handleDel={handleDeleteClick} />
     </div>
   );
 }
