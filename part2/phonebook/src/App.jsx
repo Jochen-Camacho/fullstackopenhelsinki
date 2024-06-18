@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import PhonebookService from "./components/services/persons";
+import Notification from "./components/Notification";
+import PhonebookService from "./services/persons";
 
 function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState([...persons]);
+  const [message, setMessage] = useState({
+    text: null,
+    type: null,
+  });
 
   useEffect(() => {
     PhonebookService.getAll()
@@ -51,6 +56,7 @@ function App() {
     PhonebookService.create({ name: newName, number: newNumber })
       .then((response) => {
         setPersons([...persons, response]);
+        setMessage({ text: `Added ${response.name}`, type: "message" });
       })
       .catch((error) => {
         console.log("Failed to add new person: ", error);
@@ -70,6 +76,10 @@ function App() {
           setPersons(persons.filter((person) => person.id !== response.id));
         })
         .catch((error) => {
+          setMessage({
+            text: `Information of ${person.name} has already been removed from the server`,
+            type: "error",
+          });
           console.log("Failed to delete person: ", error);
         });
     }
@@ -86,6 +96,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message.text} type={message.type} />
       <Filter handleSearchChange={handleSearchChange} />
       <h3>Add a new</h3>
       <PersonForm
