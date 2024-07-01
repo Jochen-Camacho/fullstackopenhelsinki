@@ -60,6 +60,7 @@ function App() {
       })
       .catch((error) => {
         console.log("Failed to add new person: ", error);
+        setMessage({ text: error.response.data.error, type: "error" });
       });
 
     setNewName("");
@@ -72,8 +73,11 @@ function App() {
     console.log("person: ", person);
     if (confirm(`Delete ${person.name} ?`)) {
       PhonebookService.deletePerson(id)
-        .then((response) => {
-          setPersons(persons.filter((person) => person.id !== response.id));
+        .then(() => {
+          const newPersons = persons.filter((person) => person.id !== id);
+          console.log("newPersons: ", newPersons);
+          setPersons(newPersons);
+          setMessage({ text: `Deleted ${person.name}`, type: "message" });
         })
         .catch((error) => {
           setMessage({
