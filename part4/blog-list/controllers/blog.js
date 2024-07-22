@@ -1,40 +1,66 @@
 const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
-const { error } = require("../utils/logger");
+const middleware = require("../utils/middleware");
 
 blogRouter.get("/", async (request, response, next) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+      id: 1,
+    });
     response.json(blogs);
   } catch (error) {
     next(error);
   }
 });
 
-blogRouter.post("/", async (request, response, next) => {
-  try {
-    if (!request.body.title || !request.body.url) {
-      response.status(400).json({ error: "content missing" });
+blogRouter.post(
+  "/",
+  middleware.userExtractor,
+  async (request, response, next) => {
+    try {
+      if (!request.body.title || !request.body.url) {
+        response.status(400).json({ error: "content missing" });
+      }
+      const user = request.user;
+      console.log(user);
+      const blog = new Blog({ ...request.body, user: user.id });
+      const savedBlog = await blog.save();
+
+      user.blogs = user.blogs.concat(savedBlog.id);
+      await user.save();
+
+      response.status(201).json(savedBlog);
+    } catch (error) {
+      next(error);
     }
-    const blog = new Blog(request.body);
-    const savedBlog = await blog.save();
-    response.status(201).json(savedBlog);
-  } catch (error) {
-    next(error);
   }
-});
+);
 
-blogRouter.delete("/:id", async (request, response, next) => {
-  try {
-    const id = request.params.id;
+blogRouter.delete(
+  "/:id",
+  middleware.userExtractor,
+  async (request, response, next) => {
+    try {
+      const currentUser = request.user;
 
-    const deletedBlog = await Blog.findByIdAndDelete(id);
+      const id = request.params.id;
 
-    response.status(204).json(deletedBlog);
-  } catch (error) {
-    next(error);
+      const blog = await Blog.findById(id);
+
+      if (!blog.user.toString() === currentUser.id.toString()) {
+        return response.status(401).json({ error: "User not the creator" });
+      }
+
+      await Blog.deleteOne(blog);
+      console.log(blog);
+      response.status(204).json(blog);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 blogRouter.put("/:id", async (request, response, next) => {
   try {

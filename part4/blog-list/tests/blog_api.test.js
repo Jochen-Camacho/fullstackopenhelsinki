@@ -1,16 +1,42 @@
-const { test, after, beforeEach } = require("node:test");
+const { test, after, beforeEach, before } = require("node:test");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const assert = require("node:assert");
 const helper = require("./test_helper");
 const Blog = require("../models/blog");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const api = supertest(app);
+let token = "";
+let user = null;
+
+before(async () => {
+  await User.deleteMany({});
+  const passwordHash = await bcrypt.hash("root", 10);
+  user = new User({
+    username: "root",
+    name: "Superuser",
+    passwordHash,
+  });
+  await user.save();
+
+  const loginData = await api
+    .post("/api/login")
+    .send(helper.loginCreds)
+    .expect(200);
+
+  token = JSON.parse(loginData.text).token;
+});
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const newBlogs = helper.blogs.map((blog) => (blog = new Blog(blog)));
+  const newBlogs = helper.blogs.map((blog) => {
+    blog = new Blog(blog);
+    blog.user = user;
+    return blog;
+  });
   const promises = newBlogs.map((blog) => blog.save());
   await Promise.all(promises);
 });
@@ -43,6 +69,7 @@ test("creates new blog post", async () => {
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set({ Authorization: `Bearer ${token}` })
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
@@ -60,6 +87,7 @@ test("likes property defaults to 0", async () => {
   const response = await api
     .post("/api/blogs")
     .send(newBlog)
+    .set({ Authorization: `Bearer ${token}` })
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
@@ -72,7 +100,11 @@ test("title is required", async () => {
     url: "https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf",
   };
 
-  await api.post("/api/blogs").send(newBlog).expect(400);
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .set({ Authorization: `Bearer ${token}` })
+    .expect(400);
 });
 
 test("url is required", async () => {
@@ -81,16 +113,31 @@ test("url is required", async () => {
     author: "Edsger W. Dijkstra",
   };
 
-  await api.post("/api/blogs").send(newBlog).expect(400);
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .set({ Authorization: `Bearer ${token}` })
+    .expect(400);
 });
 
 test("delete blog functions", async () => {
-  const blogAtStart = await helper.blogsInDB();
-  const blogToDelete = blogAtStart[0];
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
-  const blogsAtEnd = await helper.blogsInDB();
+  const blogsAtStart = await helper.blogsInDB();
+  console.log("Blogs at start:", blogsAtStart); // Log initial blogs
+  const blogToDelete = blogsAtStart[0];
 
-  assert.strictEqual(blogsAtEnd.length, helper.blogs.length - 1);
+  console.log("Blog to delete:", blogToDelete); // Log the blog to delete
+
+  const response = await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .set({ Authorization: `Bearer ${token}` })
+    .expect(204);
+
+  console.log("Delete response:", response.body); // Log the delete response
+
+  const blogsAtEnd = await helper.blogsInDB();
+  console.log("Blogs at end:", blogsAtEnd); // Log final blogs
+
+  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
 });
 
 test("updating information works", async () => {
@@ -107,6 +154,8 @@ test("updating information works", async () => {
 
   assert.deepStrictEqual(edittedBlog, blogsAtEnd[0]);
 });
+
+test();
 
 after(async () => {
   await mongoose.connection.close();
