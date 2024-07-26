@@ -155,7 +155,53 @@ test("updating information works", async () => {
   assert.deepStrictEqual(edittedBlog, blogsAtEnd[0]);
 });
 
-test();
+test("user with correct data is created", async () => {
+  const newUser = {
+    username: "test",
+    name: "test",
+    password: "test",
+  };
+
+  await api
+    .post("/api/users")
+    .send(newUser)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const users = await helper.usersInDB();
+  assert.strictEqual(users.length, 2);
+});
+
+test("invalid user creation fails", async () => {
+  const newUser = {
+    username: "t",
+    name: "t",
+    password: "t",
+  };
+
+  const response = await api.post("/api/users").send(newUser).expect(400);
+
+  const users = await helper.usersInDB();
+  assert.strictEqual(users.length, 2);
+  assert.strictEqual(
+    JSON.parse(response.error.text).error,
+    "invalid username or password"
+  );
+});
+
+test("create blog fails without token", async () => {
+  const newBlog = {
+    title: "Go To Statement Considered Harmful",
+    author: "Edsger W. Dijkstra",
+    url: "https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf",
+    likes: 5,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(401);
+
+  const blogs = await helper.blogsInDB();
+  assert.strictEqual(blogs.length, helper.blogs.length);
+});
 
 after(async () => {
   await mongoose.connection.close();
