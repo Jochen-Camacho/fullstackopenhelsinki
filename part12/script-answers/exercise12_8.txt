@@ -1,0 +1,71 @@
+Script started on 2024-08-01 16:30:57+00:00 [TERM="xterm" TTY="/dev/pts/0" COLUMNS="57" LINES="11"]
+# mongosh -u root -p example
+Current Mongosh Log ID: 66abb853513844ac0f149f47
+Connecting to:          mongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10
+Using MongoDB:          7.0.12
+Using Mongosh:          2.2.10
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-08-01T16:27:06.410+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2024-08-01T16:27:07.595+00:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never' in this binary version
+   2024-08-01T16:27:07.595+00:00: vm.max_map_count is too low
+------
+
+test> show dbs
+admin         100.00 KiB
+config         72.00 KiB
+local          72.00 KiB
+the_database   72.00 KiB
+test> use the_database
+switched to db the_database
+the_database> show collections
+todos
+the_database> db.todos.find({})
+[
+  {
+    _id: ObjectId('66ab1b89a192795079149f48'),
+    text: 'Write code',
+    done: true
+  },
+  {
+    _id: ObjectId('66ab1b89a192795079149f49'),
+    text: 'Learn about containers',
+    done: false
+  }
+]
+the_database> db.todos.insertOne(
+... {
+... text: "Increase the number of tools in my tool belt",
+
+... done: false
+... }
+... )
+{
+  acknowledged: true,
+  insertedId: ObjectId('66abb8e4513844ac0f149f48')       
+}
+the_database> db.todos.find({})
+[
+  {
+    _id: ObjectId('66ab1b89a192795079149f48'),
+    text: 'Write code',
+    done: true
+  },
+  {
+    _id: ObjectId('66ab1b89a192795079149f49'),
+    text: 'Learn about containers',
+    done: false
+  },
+  {
+    _id: ObjectId('66abb8e4513844ac0f149f48'),
+    text: 'Increase the number of tools in my tool belt',
+    done: false
+  }
+]
+the_database> exit
+# exit
+
+Script done on 2024-08-01 16:35:26+00:00 [COMMAND_EXIT_CODE="0"]

@@ -1,0 +1,83 @@
+Script started on 2024-07-30 21:19:39-04:00 [TERM="xterm-256color" TTY="/dev/pts/5" COLUMNS="178" LINES="12"]
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+[?2004h]0;jochen@JLaptop: /mnt/d/CodingPractise/fullstackopenhelsinki/part12/part12-containers-applications[01;32mjochen@JLaptop[00m:[01;34m/mnt/d/CodingPractise/fullstackopenhelsinki/part12/part12-containers-applications[00m$ [7m$ docker container run hello-world[27m[1P$ docker container run hello-worl[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kdocker run -l[Kit ubuntu bash
+[?2004l
+Unable to find image 'ubuntu:latest' locally
+latest: Pulling from library/ubuntu
+
+[1A[2K
+9c704ecd0c69: Pulling fs layer 
+[1B[1A[2K
+9c704ecd0c69: Downloading [>                                                  ]  298.2kB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [=====>                                             ]  3.341MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [==========>                                        ]  6.101MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [==============>                                    ]  8.588MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [===================>                               ]  11.39MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [=======================>                           ]  13.83MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [==========================>                        ]     16MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [===============================>                   ]  18.46MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [===================================>               ]  20.94MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [=======================================>           ]  23.39MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [===========================================>       ]  25.88MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Downloading [================================================>  ]  28.65MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Verifying Checksum 
+[1B[1A[2K
+9c704ecd0c69: Download complete 
+[1B[1A[2K
+9c704ecd0c69: Extracting [>                                                  ]  327.7kB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [=====>                                             ]  3.277MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [==========>                                        ]  6.226MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [=============>                                     ]  8.192MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [===============>                                   ]  9.503MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [====================>                              ]  12.45MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [============================>                      ]  17.04MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [===================================>               ]  20.97MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [=========================================>         ]   24.9MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [===========================================>       ]  25.56MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [==============================================>    ]  27.53MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [===============================================>   ]  28.18MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [=================================================> ]  29.16MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Extracting [==================================================>]  29.71MB/29.71MB
+[1B[1A[2K
+9c704ecd0c69: Pull complete 
+[1BDigest: sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30
+Status: Downloaded newer image for ubuntu:latest
+[?2004h]0;root@5d940af2e455: /root@5d940af2e455:/# mikdir /usr/src/app[1P
+[?2004l
+[?2004h]0;root@5d940af2e455: /root@5d940af2e455:/# tocuh   cuch    uch /usr/ss rc// app/index.js
+[?2004l
+[?2004h]0;root@5d940af2e455: /root@5d940af2e455:/# [Kexit
+[?2004l
+exit
+[?2004h]0;jochen@JLaptop: /mnt/d/CodingPractise/fullstackopenhelsinki/part12/part12-containers-applications[01;32mjochen@JLaptop[00m:[01;34m/mnt/d/CodingPractise/fullstackopenhelsinki/part12/part12-containers-applications[00m$ exit
+[?2004l
+exit
+
+Script done on 2024-07-30 21:21:42-04:00 [COMMAND_EXIT_CODE="0"]
