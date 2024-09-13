@@ -79,7 +79,9 @@ blogRouter.put('/:id', async (request, response, next) => {
 
     const updatedBlog = await Blog.findByIdAndUpdate(id, newBlog, {
       new: true,
-    }).populate('user', { username: 1, name: 1, id: 1 });
+    })
+      .populate('user', { username: 1, name: 1, id: 1 })
+      .populate('comments');
 
     response.json(updatedBlog);
   } catch (error) {
@@ -92,10 +94,14 @@ blogRouter.post('/:id/comments', async (request, response, next) => {
 
   try {
     const blog = await Blog.findById(id);
+
     const comment = new Comment({ ...request.body });
     const savedComment = await comment.save();
     blog.comments = blog.comments.concat(savedComment.id);
-    const savedBlog = await blog.save();
+    await blog.save();
+    const savedBlog = await Blog.findById(blog.id)
+      .populate('user', { username: 1, name: 1, id: 1 })
+      .populate('comments');
 
     response.json(savedBlog);
   } catch (error) {

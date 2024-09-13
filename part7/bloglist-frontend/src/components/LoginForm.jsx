@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState('');
@@ -18,33 +20,33 @@ const LoginForm = ({ handleLogin }) => {
     <div>
       <h1>Login Page</h1>
 
-      <form onSubmit={handleLoginLocal}>
-        <div>
-          <label>
+      <Form onSubmit={handleLoginLocal}>
+        <Form.Group>
+          <Form.Label>
             Username:
-            <input
+            <Form.Control
               type="text"
               name="Username"
               data-testid="Username"
               value={username}
               onChange={({ target }) => setUsername(target.value)}
             />
-          </label>
-        </div>
-        <div>
-          <label>
+          </Form.Label>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>
             Password:
-            <input
+            <Form.Control
               type="password"
               name="Password"
               data-testid="Password"
               value={password}
               onChange={({ target }) => setPassword(target.value)}
             />
-          </label>
-        </div>
-        <button type="submit">Login</button>
-      </form>
+          </Form.Label>
+        </Form.Group>
+        <Button type="submit">Login</Button>
+      </Form>
     </div>
   );
 };

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const Blog = ({ blog, handleUpdate, handleDelete, userId }) => {
   const [visible, setVisible] = useState(false);
   const toggleVisibility = () => setVisible(!visible);
   const blogStyles = {
     border: '1px solid black',
-    padding: '4px',
+    padding: '2px',
     display: 'flex',
     flexDirection: 'column',
     margin: '4px 0 0 0',
@@ -43,9 +44,14 @@ const Blog = ({ blog, handleUpdate, handleDelete, userId }) => {
         <Link to={`/blogs/${blog.id}`}>
           <span className="blogTitle">{blog.title}</span> {blog.author}{' '}
         </Link>
-        <button id="display-btn" className="showBtn" onClick={toggleVisibility}>
+        <Button
+          variant="primary"
+          id="display-btn"
+          className="showBtn"
+          onClick={toggleVisibility}
+        >
           {visible ? 'Hide' : 'View'}
-        </button>
+        </Button>
         {visible && (
           <div>
             <a href={blog.url} target="_blank" rel="noreferrer">

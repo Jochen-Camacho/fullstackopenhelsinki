@@ -57,3 +57,10 @@ export const likeBlog = (blog) => {
     dispatch(updateBlog(updatedBlog));
   };
 };
+
+export const addComment = (blogId, content) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.addComment(content, blogId);
+    dispatch(updateBlog(updatedBlog));
+  };
+};

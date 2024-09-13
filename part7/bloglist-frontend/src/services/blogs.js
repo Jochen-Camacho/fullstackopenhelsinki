@@ -50,4 +50,20 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
-export default { getAll, setToken, create, update, deleteBlog };
+const addComment = async (content, id) => {
+  try {
+    const config = {
+      headers: { Authorization: token },
+    };
+    const response = await axios.post(
+      `${baseUrl}/${id}/comments`,
+      { content },
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default { getAll, setToken, create, update, deleteBlog, addComment };

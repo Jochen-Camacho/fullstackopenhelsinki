@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 const BlogForm = ({ handleBlogCreate }) => {
   const [title, setTitle] = useState('');
@@ -21,11 +23,11 @@ const BlogForm = ({ handleBlogCreate }) => {
   return (
     <div>
       <h1>Create</h1>
-      <form onSubmit={handleBlogCreateLocal}>
-        <div>
-          <label>
+      <Form onSubmit={handleBlogCreateLocal}>
+        <Form.Group>
+          <Form.Label>
             Title:
-            <input
+            <Form.Control
               type="text"
               name="Title"
               id="Title"
@@ -33,12 +35,12 @@ const BlogForm = ({ handleBlogCreate }) => {
               value={title}
               onChange={({ target }) => setTitle(target.value)}
             />
-          </label>
-        </div>
-        <div>
-          <label>
+          </Form.Label>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>
             Author:
-            <input
+            <Form.Control
               type="text"
               name="Author"
               id="Author"
@@ -46,12 +48,12 @@ const BlogForm = ({ handleBlogCreate }) => {
               value={author}
               onChange={({ target }) => setAuthor(target.value)}
             />
-          </label>
-        </div>
-        <div>
-          <label>
+          </Form.Label>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>
             Url:
-            <input
+            <Form.Control
               type="text"
               name="Url"
               value={url}
@@ -59,12 +61,12 @@ const BlogForm = ({ handleBlogCreate }) => {
               data-testid="Url"
               onChange={({ target }) => setUrl(target.value)}
             />
-          </label>
-        </div>
-        <button type="submit" id="create-btn">
+          </Form.Label>
+        </Form.Group>
+        <Button type="submit" id="create-btn">
           Create
-        </button>
-      </form>
+        </Button>
+      </Form>
       <br></br>
     </div>
   );

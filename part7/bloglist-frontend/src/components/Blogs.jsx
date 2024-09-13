@@ -8,6 +8,7 @@ import {
   timeoutNotification,
 } from '../redux/reducers/notificationReducer';
 import { addBlog, removeBlog, likeBlog } from '../redux/reducers/blogReducer';
+import Table from 'react-bootstrap/Table';
 
 const Blogs = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -62,15 +63,17 @@ const Blogs = () => {
       <Toggleable label="new blog" ref={blogFormRef}>
         <BlogForm handleBlogCreate={handleBlogCreate} />
       </Toggleable>
-      {blogs.map((b) => (
-        <Blog
-          key={b.id}
-          blog={b}
-          handleUpdate={handleBlogUpdate}
-          handleDelete={handleDelete}
-          userId={user.id}
-        />
-      ))}
+      <Table striped>
+        {blogs.map((b) => (
+          <Blog
+            key={b.id}
+            blog={b}
+            handleUpdate={handleBlogUpdate}
+            handleDelete={handleDelete}
+            userId={user.id}
+          />
+        ))}
+      </Table>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import Comments from './Comments';
 
 const BlogPage = () => {
   const { id } = useParams();
@@ -20,6 +21,7 @@ const BlogPage = () => {
         {blog.likes} likes <button>like</button>
       </p>
       <p>added by {blog.user.name}</p>
+      <Comments comments={blog.comments} />
     </div>
   );
 };

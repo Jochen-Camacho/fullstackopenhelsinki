@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
 
 const Toggleable = forwardRef(({ label, children }, refs) => {
   const [visible, setVisible] = useState(false);
@@ -23,11 +24,13 @@ const Toggleable = forwardRef(({ label, children }, refs) => {
 
   return (
     <div>
-      {!visible && <button onClick={toggleVisibility}>{label}</button>}
+      {!visible && <Button onClick={toggleVisibility}>{label}</Button>}
       {visible && (
         <div>
           {children}
-          <button onClick={toggleVisibility}>Cancel</button>
+          <Button variant="danger" onClick={toggleVisibility}>
+            Cancel
+          </Button>
         </div>
       )}
     </div>
