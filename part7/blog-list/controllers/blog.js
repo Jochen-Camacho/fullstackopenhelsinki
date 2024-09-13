@@ -1,14 +1,17 @@
-const blogRouter = require("express").Router();
-const Blog = require("../models/blog");
-const middleware = require("../utils/middleware");
+const blogRouter = require('express').Router();
+const Blog = require('../models/blog');
+const Comment = require('../models/comment');
+const middleware = require('../utils/middleware');
 
-blogRouter.get("/", async (request, response, next) => {
+blogRouter.get('/', async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate("user", {
-      username: 1,
-      name: 1,
-      id: 1,
-    });
+    const blogs = await Blog.find({})
+      .populate('user', {
+        username: 1,
+        name: 1,
+        id: 1,
+      })
+      .populate('comments');
     response.json(blogs);
   } catch (error) {
     next(error);
@@ -16,12 +19,12 @@ blogRouter.get("/", async (request, response, next) => {
 });
 
 blogRouter.post(
-  "/",
+  '/',
   middleware.userExtractor,
   async (request, response, next) => {
     try {
       if (!request.body.title || !request.body.url) {
-        response.status(400).json({ error: "content missing" });
+        response.status(400).json({ error: 'content missing' });
       }
       const user = request.user;
       console.log(user);
@@ -31,7 +34,7 @@ blogRouter.post(
       user.blogs = user.blogs.concat(savedBlog.id);
       await user.save();
 
-      const returnBlog = await Blog.findById(savedBlog.id).populate("user", {
+      const returnBlog = await Blog.findById(savedBlog.id).populate('user', {
         username: 1,
         name: 1,
         id: 1,
@@ -45,7 +48,7 @@ blogRouter.post(
 );
 
 blogRouter.delete(
-  "/:id",
+  '/:id',
   middleware.userExtractor,
   async (request, response, next) => {
     try {
@@ -56,7 +59,7 @@ blogRouter.delete(
       const blog = await Blog.findById(id);
 
       if (!blog.user.toString() === currentUser.id.toString()) {
-        return response.status(401).json({ error: "User not the creator" });
+        return response.status(401).json({ error: 'User not the creator' });
       }
 
       await Blog.deleteOne(blog);
@@ -68,7 +71,7 @@ blogRouter.delete(
   }
 );
 
-blogRouter.put("/:id", async (request, response, next) => {
+blogRouter.put('/:id', async (request, response, next) => {
   try {
     const id = request.params.id;
 
@@ -76,9 +79,25 @@ blogRouter.put("/:id", async (request, response, next) => {
 
     const updatedBlog = await Blog.findByIdAndUpdate(id, newBlog, {
       new: true,
-    }).populate("user", { username: 1, name: 1, id: 1 });
+    }).populate('user', { username: 1, name: 1, id: 1 });
 
     response.json(updatedBlog);
+  } catch (error) {
+    next(error);
+  }
+});
+
+blogRouter.post('/:id/comments', async (request, response, next) => {
+  const id = request.params.id;
+
+  try {
+    const blog = await Blog.findById(id);
+    const comment = new Comment({ ...request.body });
+    const savedComment = await comment.save();
+    blog.comments = blog.comments.concat(savedComment.id);
+    const savedBlog = await blog.save();
+
+    response.json(savedBlog);
   } catch (error) {
     next(error);
   }
